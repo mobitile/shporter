@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dialog title="Export Symbols from Library" buttons="accept, cancel">
+	<vbox>
+		<label control="directory" value="Chose Folder to Export:" oncreate="init()" />
+		<grid>
+			<columns>
+				<column flex="1" />
+				<column flex="2" />
+			</columns>
+			<rows>
+				<row align="center">
+					<textbox id="directory" />
+					<button label="Browse" width="40" oncommand="browse()" />
+				</row> 
+			</rows> 
+		</grid>
+		<label control="scaleFactor" value="Scale Factor:" />
+		<textbox id="scaleFactor" />
+		<checkbox id="selectedOnly" checked="true" label="Export only selected Symbols" />
+	</vbox>
+  	<script>
+  		function init()
+  		{
+  			if (document.documentHasData("org.github.mobitile.shporter.dialog.DIRECTORY"))
+  			{
+  				fl.xmlui.set("directory", document.getDataFromDocument("org.github.mobitile.shporter.dialog.DIRECTORY"));
+  			}
+
+  			if (document.documentHasData("org.github.mobitile.shporter.dialog.SCALE_FACTOR"))
+  			{
+  				fl.xmlui.set("scaleFactor", document.getDataFromDocument("org.github.mobitile.shporter.dialog.SCALE_FACTOR"));
+  			}
+
+  			if (document.documentHasData("org.github.mobitile.shporter.dialog.SELECTED_ONLY"))
+  			{
+  				fl.xmlui.set("selectedOnly", document.getDataFromDocument("org.github.mobitile.shporter.dialog.SELECTED_ONLY"));
+  			}
+  		}
+
+  		function browse()
+  		{
+  			var uri = fl.browseForFolderURL("Select Directory to Export");
+
+  			fl.xmlui.set("directory", uri);
+  		}
+	</script>
+</dialog>

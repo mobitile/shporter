@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PNGExporter allows you to export a library item, timeline element or the main stage as a PNG.
  * @author Pedro Chavez
  * @email pedro@oopstoons.com
@@ -9,8 +9,8 @@
  */
 fl.runScript(fl.configURI + "Shporter/logger.jsfl");
 
-function PNGExporter(doc, outputPath) {
-	this.constructer(doc, outputPath);
+function PNGExporter(doc, outputPath, scaleFactor) {
+	this.constructer(doc, outputPath, scaleFactor);
 }
 
 PNGExporter.prototype = {
@@ -32,6 +32,9 @@ PNGExporter.prototype = {
 	
 	/** The save PNG path. */
 	outputPath:"",
+
+	/** */
+	scaleFactor:1.0,
 	
 	/** Callback on element preparation. */
 	onElementPrep:null,
@@ -42,11 +45,16 @@ PNGExporter.prototype = {
 	//-----------------------------------------------------------------------------------------------------------------------------
 	// CONSTRUCTER METHOD
 	
-	constructer:function(doc, outputPath) {
+	constructer:function(doc, outputPath, scaleFactor) 
+	{
 		this.inputDoc = doc ? doc : fl.getDocumentDOM();
-		this.inputPath = this.inputDoc.pathURI.replace(/[^.\/]+\.fla/, "");
-		this.inputName = this.inputDoc.pathURI.replace(/.+?([^.\/]+)\.fla/, "$1");
+
+		var parts = this.inputDoc.pathURI.split("/");
+
+		this.inputName = parts.pop().split(".")[0];
+		this.inputPath = parts.join("/");
 		this.outputPath = outputPath ? outputPath : this.inputPath;
+		this.scaleFactor = scaleFactor ? scaleFactor : this.scaleFactor;
 	},
 
 	//-----------------------------------------------------------------------------------------------------------------------------
@@ -284,6 +292,10 @@ PNGExporter.prototype = {
 		
 		// calculate position and size based on element bounds: good for elements
 		// BUG filters, stroke width may get clipped
+
+		element.scaleX = this.scaleFactor;
+		element.scaleY = this.scaleFactor;
+
 		var width = Math.ceil(element.width);
 		var height = Math.ceil(element.height);
 		var x = Math.floor(element.x - element.left);
