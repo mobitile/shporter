@@ -1,4 +1,4 @@
-﻿/**
+/**
  * PNGExporter allows you to export a library item, timeline element or the main stage as a PNG.
  * @author Pedro Chavez
  * @email pedro@oopstoons.com
@@ -239,6 +239,15 @@ PNGExporter.prototype = {
 		var profilePath = fl.configURI + 'Publish%20Profiles/__DELETE_ME__.xml';
 		this.outputDoc.exportPublishProfile(profilePath);
 		xml = FLfile.read(profilePath);
+
+		var outputFolderParts = (this.outputPath + "/" + fileName + ".png").split("/");
+		outputFolderParts.pop();
+		var outputFolderURI = outputFolderParts.join("/");
+
+		if (!FLfile.exists(outputFolderURI))
+		{
+			FLfile.createFolder(outputFolderURI);
+		}
 			
 		// node replacement
 		var nodeReplace = [["flash", "0"], ["png", "1"], ["defaultNames", "0"], ["pngDefaultName", "0"], ["pngFileName", fileName + ".png"], ["MatchMovieDim", "1"], ["html", "0"]];

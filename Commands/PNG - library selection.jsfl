@@ -14,15 +14,12 @@ function init()
 		var directory = exportDialog.directory;
 		var scaleFactor = parseFloat(exportDialog.scaleFactor);
 		var selectedOnly = exportDialog.selectedOnly == "true";
+		var keepFolders = exportDialog.keepFolders == "true";
 
-		fl.trace("directory: " + exportDialog.directory);
 		fl.getDocumentDOM().addDataToDocument("org.github.mobitile.shporter.dialog.DIRECTORY", "string", directory);
-
-		fl.trace("scaleFactor: " + exportDialog.scaleFactor);
 		fl.getDocumentDOM().addDataToDocument("org.github.mobitile.shporter.dialog.SCALE_FACTOR", "double", scaleFactor);
-
-		fl.trace("selectedOnly: " + exportDialog.selectedOnly);
 		fl.getDocumentDOM().addDataToDocument("org.github.mobitile.shporter.dialog.SELECTED_ONLY", "string", selectedOnly);
+		fl.getDocumentDOM().addDataToDocument("org.github.mobitile.shporter.dialog.KEEP_FOLDERS", "string", keepFolders);
 	}
 	else // user canceled dialog
 	{
@@ -41,12 +38,25 @@ function init()
 
 		return;
 	}
-	
+
 	for (var i = 0; i < itemsToExport.length; i++)
 	{
 		var item = itemsToExport[i];
-		var fileName = item.name.replace(/^(.+\/)/igm, "").replace(/\W+/ig, "_");
-		exporter.exportItem(item, item.name);
+
+		if (item.itemType == "folder")
+			continue;
+
+		var fileName = item.name;
+
+		if (!keepFolders)
+		{
+			var itemParts = fileName.split("/");
+			fileName = itemParts.pop();
+		}
+		
+		// fileName = fileName.replace(/\W+/ig, "_");
+
+		exporter.exportItem(item, fileName);
 	}
 	
 	Logger.trace();
